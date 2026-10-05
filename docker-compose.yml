@@ -1,0 +1,73 @@
+# 中间件基础设施：MySQL8 / Redis7 / Milvus2.4 + etcd + MinIO
+# 用法：docker compose up -d
+# 注意：Milvus 的 database_name(默认 ecom) 需手动创建一次（在 Python 环境里执行）：
+#   python -c "from pymilvus import MilvusClient; MilvusClient('http://127.0.0.1:19530').create_database('ecom')"
+services:
+  etcd:
+    image: quay.io/coreos/etcd:v3.5.5
+    container_name: ecom-etcd
+    environment:
+      - ETCD_AUTO_COMPACTION_MODE=revision
+      - ETCD_AUTO_COMPACTION_RETENTION=1000
+      - ETCD_QUOTA_BACKEND_BYTES=4294967296
+    volumes:
+      - ./volumes/etcd:/etcd/data
+    command: etcd -advertise-client-urls=http://etcd:2379 -listen-client-urls http://0.0.0.0:2379 --data-dir /etcd/data
+
+  minio:
+    image: quay.io/minio/minio:RELEASE.2025-06-13T11-33-47Z
+    container_name: ecom-minio
+    environment:
+      MINIO_ACCESS_KEY: minioadmin
+      MINIO_SECRET_KEY: minioadmin
+    volumes:
+      - ./volumes/minio:/minio/data
+    command: minio server /minio/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+
+  milvus:
+    image: milvusdb/milvus:v2.4.10
+    container_name: ecom-milvus
+    command: ["milvus", "run", "standalone"]
+    environment:
+      - ETCD_ENDPOINTS=etcd:2379
+      - MINIO_ADDRESS=minio:9000
+    volumes:
+      - ./volumes/milvus:/var/lib/milvus
+    ports:
+      - "19530:19530"
+      - "9091:9091"
+    depends_on:
+      - etcd
+      - minio
+
+  redis:
+    image: redis:7.2
+    container_name: ecom-redis
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./volumes/redis:/data
+    command: redis-server --requirepass 123456
+
+  mysql:
+    image: mysql:8.0.43
+    container_name: ecom-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: "123456"
+      MYSQL_DATABASE: ecommerce_qa
+    ports:
+      - "3308:3306"   # 宿主 3308（3307 已被其他项目的 mysql8 占用）
+    volumes:
+      - ./volumes/mysql:/var/lib/mysql
+      - ./init:/docker-entrypoint-initdb.d
+
+networks:
+  default:
+    name: ecom-network

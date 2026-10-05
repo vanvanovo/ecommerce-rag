@@ -1,0 +1,64 @@
+# 应用服务编排（只含 RAG 应用；中间件用根目录的 docker-compose.yml 单独起）
+#
+# 使用步骤：
+#   1) 先起中间件：            docker compose up -d
+#   2) 首次创建 Milvus 库：    python -c "from pymilvus import MilvusClient; MilvusClient('http://127.0.0.1:19530').create_database('ecom')"
+#   3) 准备 .env：             copy .env.app.example .env   （填 DASHSCOPE_API_KEY）
+#   4) 构建并启动应用：        docker compose -f docker-compose.app.yml up -d --build
+#   5) 访问：                  http://localhost:8080
+#
+# 说明：应用容器通过外部网络 ecom-network 连接中间件（由 docker-compose.yml 创建），
+#       模型/数据以 volume 挂载，不进镜像。
+
+services:
+  ecom-rag-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: ecom-rag:1.0
+    container_name: ecom-rag-app
+    ports:
+      - "${APP_PORT:-8080}:8003"
+
+    environment:
+      # MySQL（容器内走容器网络，端口用 3306，不是宿主 3308）
+      - MYSQL_HOST=${MYSQL_HOST:-ecom-mysql}
+      - MYSQL_PORT=${MYSQL_PORT:-3306}
+      - MYSQL_USER=${MYSQL_USER:-root}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD:-123456}
+      - MYSQL_DATABASE=${MYSQL_DATABASE:-ecommerce_qa}
+      # Redis
+      - REDIS_HOST=${REDIS_HOST:-ecom-redis}
+      - REDIS_PORT=${REDIS_PORT:-6379}
+      - REDIS_PASSWORD=${REDIS_PASSWORD:-123456}
+      - REDIS_DB=${REDIS_DB:-0}
+      # Milvus
+      - MILVUS_HOST=${MILVUS_HOST:-ecom-milvus}
+      - MILVUS_PORT=${MILVUS_PORT:-19530}
+      - MILVUS_DATABASE_NAME=${MILVUS_DATABASE_NAME:-ecom}
+      - MILVUS_COLLECTION_NAME=${MILVUS_COLLECTION_NAME:-ecom_rag}
+      # LLM
+      - DASHSCOPE_API_KEY=${DASHSCOPE_API_KEY}
+      - DASHSCOPE_BASE_URL=${DASHSCOPE_BASE_URL:-https://dashscope.aliyuncs.com/compatible-mode/v1}
+      - LLM_MODEL=${LLM_MODEL:-qwen-plus}
+      # 模型设备
+      - MODEL_DEVICE=${MODEL_DEVICE:-auto}
+      # 应用
+      - VALID_SOURCES=${VALID_SOURCES:-["手机", "电脑", "平板", "售后政策", "操作指南"]}
+      - CUSTOMER_SERVICE_PHONE=${CUSTOMER_SERVICE_PHONE:-400-000-0000}
+
+    volumes:
+      - ./models:/app/models:ro     # 模型只读挂载（bge-m3 / bge-reranker / bert）
+      - ./static:/app/static        # 前端页面
+      - ./logs:/app/logs            # 日志落盘
+      - ./data:/app/data            # 需要容器内跑 ingest 时用；不跑可不挂
+
+    networks:
+      - ecom-network
+    depends_on: []
+    restart: unless-stopped
+
+networks:
+  ecom-network:
+    external: true
+    name: ecom-network

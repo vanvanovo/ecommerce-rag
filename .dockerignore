@@ -1,0 +1,24 @@
+# 大文件 / 运行时产物不进镜像（运行时用 volume 挂载）
+models/
+data/
+results/
+logs/
+venv/
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+.idea/
+.git/
+.gitignore
+.env
+.env.*
+!.env.app.example
+
+# 训练中间产物
+routing/train/bert_results/
+routing/train/bert_logs/
+routing/train/baseline_intent.json
+
+# 文档
+*.md

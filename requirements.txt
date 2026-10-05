@@ -1,0 +1,29 @@
+# 电商 RAG 核心依赖（精简版，按需再补）
+pymysql==1.1.1
+redis==5.3.1
+pymilvus==2.5.4
+milvus-model==0.2.5
+sentence-transformers==3.0.1
+FlagEmbedding==1.3.5
+transformers==4.45.0
+torch==2.10.0
+jieba==0.42.1
+rank-bm25==0.2.2
+openai==2.24.0
+fastapi==0.115.12
+uvicorn==0.41.0
+pydantic==2.12.5
+python-dotenv==1.2.2
+langchain-core==1.2.16
+langchain-text-splitters==1.1.1
+python-docx==1.1.2
+python-pptx==0.6.23
+PyMuPDF==1.23.16
+opencv-python==4.10.0.84
+rapidocr-onnxruntime==1.3.8
+
+# —— 以下按需启用 ——
+# MinerU : pip install "mineru[core]"   # 文档统一转 Markdown
+# PaddleOCR: pip install paddleocr paddlepaddle   # 中文 OCR
+# pdfplumber: pip install pdfplumber    # 保留表格的纯文本 PDF 抽取
+# BLIP : 随 transformers/FlagEmbedding 自带（BLIPProcessor/BlipForConditionalGeneration）

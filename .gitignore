@@ -1,0 +1,25 @@
+# 环境与密钥（绝不入库）
+.env
+.env.*
+!.env.example
+!.env.app.example
+*.bak
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+.pytest_cache/
+
+# 模型权重与运行产物（体积大，不入库）
+models/
+volumes/
+logs/
+results/
+routing/train/bert_results/
+routing/train/checkpoints/
+
+# IDE
+.idea/
+.vscode/
