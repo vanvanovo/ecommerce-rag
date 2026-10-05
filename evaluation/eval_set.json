@@ -1,0 +1,18 @@
+[
+  {"question": "iPhone 16 Pro 128G 官网售价多少？", "ground_truth": "7999 元。"},
+  {"question": "iPhone 16 Pro 512G 是什么颜色，售价多少？", "ground_truth": "沙漠色钛金属，售价 10999 元。"},
+  {"question": "iPhone 16 Pro 搭载什么芯片？", "ground_truth": "A18 Pro 仿生芯片（3 纳米）。"},
+  {"question": "iPhone 16 Pro 的摄像头配置怎么样？", "ground_truth": "4800 万像素主摄 + 4800 万像素超广角 + 长焦（5 倍光学变焦）。"},
+  {"question": "iPhone 16 Pro 能分期吗？", "ground_truth": "支持 12 期免息。"},
+  {"question": "iPhone 16 Pro 的视频播放续航是多久？", "ground_truth": "视频播放最长 27 小时，支持 MagSafe 无线充电。"},
+  {"question": "iPhone 16 Pro 出厂系统是什么？", "ground_truth": "iOS 18，支持 Apple Intelligence。"},
+  {"question": "iPhone 16 Pro 包装里有哪些配件？", "ground_truth": "iPhone 一台、USB-C 充电线（1米）、保修卡、说明书。"},
+  {"question": "7 天无理由退货需要什么条件？", "ground_truth": "签收之日起 7 天内；商品完好、配件齐全、不影响二次销售（未激活、未人为损坏）；退货运费由买家承担（质量问题除外）。"},
+  {"question": "退款多久能到账？", "ground_truth": "审核通过后 1-3 个工作日原路退回。"},
+  {"question": "15 天换货的条件是什么？", "ground_truth": "签收之日起 15 天内，出现非人为质量问题（屏幕坏点、无法开机等），凭检测报告可换货。"},
+  {"question": "iPhone 的保修期是多久？", "ground_truth": "整机 1 年质保，主要部件（主板、显示屏、电池、摄像头）同样 1 年。"},
+  {"question": "电池健康度低于多少可以免费更换？", "ground_truth": "电池在质保期内健康度低于 80% 可免费更换。"},
+  {"question": "哪些情况不在保修范围？", "ground_truth": "人为损坏（进水、摔裂、私自拆机）不在保修范围。"},
+  {"question": "价保怎么申请？", "ground_truth": "自购买之日起 7 天内，同渠道同型号降价可申请价保补差；联系在线客服提供订单号，核实后 3 个工作日内补差额到原支付账户。"},
+  {"question": "发票怎么开？", "ground_truth": "支持电子发票，下单后 24 小时内开具，可在「我的订单」下载；纸质发票需在订单备注中说明。"}
+]

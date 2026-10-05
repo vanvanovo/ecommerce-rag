@@ -1,0 +1,16 @@
+{
+  "faithfulness": 0.7917,
+  "answer_relevancy": 0.7362,
+  "context_precision": 0.9375,
+  "context_recall": 0.9375,
+  "samples": 16,
+  "valid_count": {
+    "faithfulness": 16,
+    "answer_relevancy": 16,
+    "context_precision": 16,
+    "context_recall": 16
+  },
+  "judge": "ollama/qwen2.5:7b",
+  "embedding": "ollama/mxbai-embed-large",
+  "note": "本地全链路复现；首轮发现 1 例意图误判 badcase（续航题→售后政策错源过滤），已归因"
+}

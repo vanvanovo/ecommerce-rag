@@ -1,0 +1,7 @@
+# RAGAS 评估附加依赖（与主项目 requirements 分开，避免影响生产安装）
+ragas==0.2.6
+datasets>=3.0
+pandas>=2.0
+langchain-openai>=0.3
+langchain-community>=0.3
+langchain-ollama>=0.2

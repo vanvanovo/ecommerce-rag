@@ -33,6 +33,7 @@ ecommerce_rag/
 ├─ data/ecommerce/         # 文档（手机/电脑/售后/指南 分目录，父目录名=source）
 ├─ static/                 # 前端聊天页（内置 index.html）
 ├─ classify_data/          # 意图训练种子 + 评测集
+├─ evaluation/             # RAGAS 四维评估（评测集 + 脚本 + 实测结果）
 ├─ models/                 # bge-m3 / bge-reranker / bert-base-chinese（本机已就位）
 ├─ config.ini / .env.example / .env.app.example
 ├─ docker-compose.yml      # 中间件：MySQL/Redis/Milvus+etcd+MinIO
@@ -62,6 +63,10 @@ python ingest/pipeline.py
 # 6. 启动服务
 python -m app.main
 # 浏览器打开 http://localhost:8003
+
+# 7.（可选）RAGAS 四维评估（需本地 Ollama：qwen2.5:7b + mxbai-embed-large）
+pip install -r evaluation/requirements-eval.txt
+python evaluation/run_ragas_eval.py
 ```
 
 ## 里程碑对照（M0~M9）
@@ -74,7 +79,7 @@ python -m app.main
 - M5 前置链路 → `retrieval/`（正则/Redis/MySQL BM25）✅
 - M6 意图分流 → `routing/`（三分类 + 训练/评测闭环）✅
 - M7 生成+接口 → `core/rag_system.py`、`app/main.py`（双 Prompt + 指代消解 + 策略路由）✅
-- M8 评估 → `routing/train/evaluate_intent.py`（意图回归门禁）；RAGAS 可接入（`rag_qa/rag_assessment` 参考）✅/可扩展
+- M8 评估 → 意图回归门禁（`routing/train/evaluate_intent.py`）+ RAGAS 四维评估（`evaluation/`）：忠实度 0.79 / 相关性 0.74 / 精确率 0.94 / 召回率 0.94（16 条电商评测集）✅
 - M9 部署 → `Dockerfile` + `docker-compose.app.yml` + `.env.app.example` + `接口文档.md` ✅
 
 ---
